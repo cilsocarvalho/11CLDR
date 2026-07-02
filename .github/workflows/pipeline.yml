@@ -67,6 +67,7 @@ jobs:
         continue-on-error: true
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+          SNYK_ORG_ID: ${{ secrets.SNYK_ORG_ID }}
         with:
           args: --sarif-file-output=snyk.sarif
   code-analysis:
