@@ -63,3 +63,25 @@ jobs:
     # See: https://github.com/gradle/actions/blob/main/dependency-submission/README.md
     - name: Generate and submit dependency graph
       uses: gradle/actions/dependency-submission@af1da67850ed9a4cedd57bfd976089dd991e2582 # v4.0.0
+  deploy-azure:
+    needs: build
+    name: Deploy-azure
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    environment:
+      name: AZURE-PRO
+      url: https://devopsfiap-on-app.azurewebsites.net/
+
+    steps:
+      - name: Download JAR
+        uses: actions/download-artifact@v3
+        with:
+          name: artifact
+          path: target/
+
+      - name: DeployAzure
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: devopsfiap-on-app
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          package: '${{ github.workspace }}/target/*.jar'
